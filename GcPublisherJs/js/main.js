@@ -73,7 +73,7 @@ function scanDev(){
  */
 window.onload = function () {
     const tUrlParams = new URLSearchParams(window.location.search);
-    const tFps = (tUrlParams.has('fps')) ? tUrlParams.get('fps') : 20;
+    const tFps = (tUrlParams.has('fps')) ? tUrlParams.get('fps') : 30;
     const tGamepadModel = (tUrlParams.has('gamepad_model')) ? tUrlParams.get('gamepad_model') : "simple";
     const tGamepadId = (tUrlParams.has('gamepad_id')) ? tUrlParams.get('gamepad_id') : 0;
 
@@ -122,7 +122,6 @@ function mqttConnect(){
     
     // connect the client
     MQTT_CLIENT.connect({
-        useSSL: true,
         reconnect: true,
         onSuccess: onMqttConnectSuccess,
         onFailure: onMqttConnectFailure
