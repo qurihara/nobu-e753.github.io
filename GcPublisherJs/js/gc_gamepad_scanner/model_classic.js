@@ -1,9 +1,9 @@
 /**
- * Scanner module for classic gamepad (1-dpad + 8buttons)
+ * Scanner module for classic gamepad (16buttons)
  */
 var GC_GAMEPAD_classic = {};
 
-GC_GAMEPAD_classic.dev = null;
+GC_GAMEPAD_classic.id = null;
 
 GC_GAMEPAD_classic.enableDev = false;
 GC_GAMEPAD_classic.enableAng = false;
@@ -16,16 +16,15 @@ GC_GAMEPAD_classic.init = function(aEnableDev, aEnableAng){
 }
 
 GC_GAMEPAD_classic.scan = function(){
-
-    if (!GC_GAMEPAD_classic.enableDev || (GC_GAMEPAD_classic.dev == null))
+    var tDev = navigator.getGamepads()[GC_GAMEPAD_classic.dev];
+    if (!GC_GAMEPAD_classic.enableDev || (tDev == null))
         return null;
-    var tDev = GC_GAMEPAD_classic.dev;
     
     // scan dpad
-    const tLF = (tDev.axes[0] < -0.5) ? 1:0;
-    const tRT = (tDev.axes[0] >  0.5) ? 1:0;
-    const tUP = (tDev.axes[1] < -0.5) ? 1:0;
-    const tDW = (tDev.axes[1] >  0.5) ? 1:0;
+    const tLF = tDev.buttons[14].pressed;
+    const tRT = tDev.buttons[15].pressed;
+    const tUP = tDev.buttons[12].pressed;
+    const tDW = tDev.buttons[13].pressed;
     var tRawDpad = (tLF<<3) | (tDW<<2) | (tRT<<1) | (tUP<<0);
     tNewDpad = GC_GAMEPAD_classic.to9dir[tRawDpad];
 

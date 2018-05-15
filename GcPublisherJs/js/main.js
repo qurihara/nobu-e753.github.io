@@ -6,7 +6,6 @@
 var MQTT_CLIENT = null;
 var GC_GAMEPAD = null;
 var EVENT_HISTORY = null;
-
 /**
  * Reload scan taget devices
  */
@@ -35,7 +34,7 @@ function resetHistory(){
 /**
  * Main scan loop
  * 
- *  - max event history length = 7;
+ *  - max event history length = 8;
  */
 function scanDev(){
     const tPrevHistoryCount = EVENT_HISTORY.count;
@@ -70,16 +69,21 @@ function scanDev(){
 /**
  * default fps = 20
  * default gamepad_model = "classic"
+ * default gamepad_id = 0
  */
 window.onload = function () {
     const tUrlParams = new URLSearchParams(window.location.search);
     const tFps = (tUrlParams.has('fps')) ? tUrlParams.get('fps') : 20;
-    const tGamepadModelName = (tUrlParams.has('gamepad')) ? tUrlParams.get('gamepad') : "classic";
+    const tGamepadModel = (tUrlParams.has('gamepad_model')) ? tUrlParams.get('gamepad_model') : "simple";
+    const tGamepadId = (tUrlParams.has('gamepad_id')) ? tUrlParams.get('gamepad_id') : 0;
 
     console.info("set scan FPS = %d", tFps);
-    console.info("set target gamepad = %s", tGamepadModelName);
+    console.info("set target gamepad = %s", tGamepadModel);
 
-    switch (tGamepadModelName){
+    switch (tGamepadModel){
+        case "simple":
+            GC_GAMEPAD = GC_GAMEPAD_simple;
+            break;
         case "classic":
             GC_GAMEPAD = GC_GAMEPAD_classic;
             break;
@@ -93,21 +97,24 @@ window.onload = function () {
             GC_GAMEPAD = GC_GAMEPAD_custom;
             break;
         default:
-            console.error("Unknown gamepad model : %s", tGamepadModelName);
+            console.error("Unknown gamepad model : %s", tGamepadModel);
             break;
     }
+    GC_GAMEPAD.dev = tGamepadId;
 
     document.getElementById("mqtt_connect").value = "connect";
     
+    window.addEventListener("gamepadconnected", onGamepadConnected);
+    window.addEventListener("gamepaddisconnected", onGamepadDisconnected);
+
     resetDev();
     resetHistory();
     setInterval(scanDev, 1000 / tFps)
 }
-
 /**
  * MQTT connection
  */
-function mqttConnect(){
+function mqttConnect(){  
     var tHost = document.getElementById("mqtt_host").value;
     var tPort = document.getElementById("mqtt_port").value;
 
@@ -120,6 +127,10 @@ function mqttConnect(){
         onFailure: onMqttConnectFailure
     });
 }
+
+/**
+ * MQTT events
+ */
 function onMqttConnectSuccess() {
     console.info("MQTT connection success");
     var tButton = document.getElementById("mqtt_connect");
@@ -135,14 +146,12 @@ function onMqttConnectFailure() {
 /**
  * Gamepad events
  */
-window.addEventListener("gamepadconnected", function(e){
-    console.info("gamepad connected : %s. %d buttons, %d axes.",
-        e.gamepad.id, e.gamepad.buttons.length, e.gamepad.axes.length);
-    GC_GAMEPAD.dev = e.gamepad;
-});
-
-window.addEventListener("gamepaddisconnected", function(e){
+function onGamepadConnected(e) {
+    console.info("gamepad connected(%d) :  %s. %d buttons, %d axes.",
+        e.gamepad.index, e.gamepad.id, e.gamepad.buttons.length, e.gamepad.axes.length);
+};
+function onGamepadDisconnected(e){
     console.info("gamepad disconnected : %s",
         e.gamepad.id);
     GC_GAMEPAD.dev = null;
-});
+};

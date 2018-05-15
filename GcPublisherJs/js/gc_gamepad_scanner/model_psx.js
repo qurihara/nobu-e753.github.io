@@ -15,12 +15,10 @@ GC_GAMEPAD_psx.init = function(aEnableDev, aEnableAng){
     GC_GAMEPAD_psx.stateStr = "";
 }
 
-
 GC_GAMEPAD_psx.scan = function(){
-
-    if (!GC_GAMEPAD_psx.enableDev || (GC_GAMEPAD_psx.dev == null))
+    var tDev = navigator.getGamepads()[GC_GAMEPAD_classic.dev];
+    if (!GC_GAMEPAD_classic.enableDev || (tDev == null))
         return null;
-    var tDev = GC_GAMEPAD_psx.dev;
 
     // scan dpad
     const tLF = (tDev.axes[4] < -0.5) ? 1:0;

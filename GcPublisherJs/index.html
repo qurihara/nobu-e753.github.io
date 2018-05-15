@@ -16,6 +16,7 @@
 
   <title>GcPublisher : Input Device Scanner for GameControllerizer</title>
 
+  <script src="./js/gc_gamepad_scanner/model_simple.js"></script>
   <script src="./js/gc_gamepad_scanner/model_classic.js"></script>
   <script src="./js/gc_gamepad_scanner/model_psx.js"></script>
   <script src="./js/gc_gamepad_scanner/model_xbox.js"></script>
@@ -25,21 +26,10 @@
   <script src="./js/gc_keyboard_scanner.js"></script>
   <script src="./js/paho-mqtt-min.js"></script>
 
-  <script src="./js/gc_publisher.js"></script>
+  <script src="./js/main.js"></script>
   
   <!-- Custom styles for this template -->
   <style>
-    .button-black {
-      background-color: rgb(96, 108, 118);
-      border-color: rgb(96, 108, 118);      
-    }
-    .history {
-      font-family:sans-serif;
-      font-size: 1.25rem;
-      overflow: hidden;
-      resize:none;      
-    }
-
     body {
       font-family: 'Raleway', serif;
       background-color: #F4F4F4;
@@ -60,8 +50,19 @@
     .container {
       max-width: 75rem;
     }
+    .button-black {
+      background-color: rgb(96, 108, 118);
+      border-color: rgb(96, 108, 118);      
+    }
+    .history {
+      font-family:sans-serif;
+      font-size: 1.25rem;
+      overflow: hidden;
+      resize:none;
+      width: 90%;
+      height: 13.5rem;
+    }
   </style>
-
 </head>
 
 <body oncontextmenu="return false;">
@@ -85,8 +86,7 @@
           ><label class="label-inline" for="dev_keyboard">Keyboard</label>&nbsp; 
           (<input type="checkbox" id="dev_moveless" onclick="resetDev(); resetHistory();"
           ><label class="label-inline" for="dev_moveless">moveless</label>)
-
-          <textarea class=history id="event_history" rows="9" style="width:90%; height:13.5rem;"></textarea>
+          <textarea class=history id="event_history" rows="9"></textarea>
         </div>
         <!-- MQTT Server -->
         <div class="column">
@@ -95,9 +95,8 @@
           <input type="text" id="mqtt_host" style="width:17.5rem;"><br>
           Port &ensp;   
           <input type="text" id="mqtt_port" style="width:17.5rem;"><br>
-          (Port for Websocket, not Mqtt)<br>
+          (for Websocket, not Mqtt)<br>
           &emsp;&emsp;&ensp;
-          <!-- <input class="button button-outline" id="mqtt_connect" value="connect" style="width:17.5rem;" onclick="mqttConnect();"> -->
           <input class="button" id="mqtt_connect" value="connect" style="width:17.5rem;" onclick="mqttConnect();">
         </div>
       </div>
@@ -108,9 +107,10 @@
       <h3>About</h3>
       Input Device Scanner for
       <a href="#">GameControllerizer</a>. Control signals from a input device is scanned, then published as MQTT message.
+      <b>FireFox</b> browser is strongly recommend.
     </section><br><br>
 
-    <!-- quer paraemter -->
+    <!-- query paraemters -->
     <section>
       <h3>Query parameters</h3>
       <table>
@@ -128,10 +128,21 @@
               <td>Device scanning fps (default=20)</td>
             </tr>
             <tr>
-              <td>gamepad</td>
-              <td>String</td>
-              <td>Gamepad model ( {"classic", "psx", "xbox", "custom"} )</td>
+              <td>gamepad_id</td>
+              <td>Int</td>
+              <td>Gamepad id (check console log)</td>
             </tr>
+            <tr>
+              <td>gamepad_model</td>
+              <td>String</td>
+              <td>
+                <ul>
+                  <li>'classic' : 16-buttons</li>
+                  <li>'simple' : 2-axes, 12-buttons(max)</li>
+                  <li>'psx' : 6-axes, 12-buttons(max)</li>
+                  <!-- <li>"xbox" : </li> -->
+                  <li>'custom' : (not implemented)</li>
+                </ul></td></tr>
           </tbody>
         </table>
     </section><br>
@@ -140,15 +151,14 @@
     <section>
       <h3>Customize</h3>
       <h4>Local hosting</h4>
-      For much better performance, GcPublisher can be executed on local http server
-      such as npm-http-server.
+      GcPublisher can be executed on local http server such as npm-http-server.      
       <pre><code>  $ npm install http-server
   $ git clone [this repository]
   $ cd [target dir]
   $ http-server</code></pre>
 
       <h4>Custom gamepad</h4>
-      Edit `js/gc_gamepad_scanner/custom.js`, then reload page with query paramter (`?gamepad="custom"`).
+      Edit `js/gc_gamepad_scanner/model_custom.js`, then reload page with query paramter (?gamepad='custom').
       <br><br>
 
       <h4>MQTT over TLS</h4>
