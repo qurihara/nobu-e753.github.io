@@ -122,6 +122,7 @@ function mqttConnect(){
     
     // connect the client
     MQTT_CLIENT.connect({
+        useSSL: true,
         reconnect: true,
         onSuccess: onMqttConnectSuccess,
         onFailure: onMqttConnectFailure
