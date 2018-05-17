@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="qurihara">
+  <meta name="description" content="Auto controller">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:400,300,600">
+  <link rel="stylesheet" href="./css/normalize.css">
+  <link rel="stylesheet" href="./css/milligram.min.css">
+
+  <title>Auto controller</title>
+
+  <script src="./js/paho-mqtt-min.js"></script>
+
+  <script src="./js/auto.js"></script>
+
+  <!-- Custom styles for this template -->
+  <style>
+    body {
+      font-family: 'Raleway', serif;
+      background-color: #F4F4F4;
+      text-align: center;
+    }
+    section {
+      text-align: left;
+    }
+    .header {
+      text-align: center;
+      padding: 2rem;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 1rem;
+      background-color: #EEEEEE;
+    }
+    .container {
+      max-width: 75rem;
+    }
+    .button-black {
+      background-color: rgb(96, 108, 118);
+      border-color: rgb(96, 108, 118);
+    }
+    .history {
+      font-family:sans-serif;
+      font-size: 1.25rem;
+      overflow: hidden;
+      resize:none;
+      width: 90%;
+      height: 13.5rem;
+    }
+  </style>
+</head>
+
+<body oncontextmenu="return false;">
+  <div class="container">
+
+    <!-- header -->
+    <section class="header">
+      <h1>Auto controller</h1>
+    </section>
+
+    <!-- Information -->
+    <section>
+      <div class="row">
+        <div class="column column-67">
+          <h3>History</h3>
+          <textarea class=history id="event_history" rows="9"></textarea>
+        </div>
+        <!-- MQTT Server -->
+        <div class="column">
+          <h3>MQTT over WS</h3>
+          Host &thinsp;
+          <input type="text" id="mqtt_host" style="width:17.5rem;"><br>
+          Port &ensp;
+          <input type="text" id="mqtt_port" style="width:17.5rem;"><br>
+          (for Websocket, not Mqtt)<br>
+          &emsp;&emsp;&ensp;
+          <input class="button" id="mqtt_connect" value="connect" style="width:17.5rem;" onclick="mqttConnect();">
+        </div>
+      </div>
+    </section><br>
+
+
+  </div>
+
+</body>
+
+</html>
