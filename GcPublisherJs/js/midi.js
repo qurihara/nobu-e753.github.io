@@ -45,11 +45,21 @@ window.onload = function () {
            if (e.data[0] == 144){
              const tPrevHistoryCount = EVENT_HISTORY.count;
 
+             var tNewAng = [0, 0, 0, 0];
+             const tNewState = {
+                 "dpad" : 4,
+                 "btn" : 2,
+                 "ang" : tNewAng,
+                 "dur" : 3
+             };
+             // const tNewStateStr = JSON.stringify(tNewState);
              var tEvents = [];
              // tEvents.push({"dev":"gamepad",  "msg":GC_GAMEPAD.scan()});
              // tEvents.push({"dev":"mouse",    "msg":GC_MOUSE.scan()});
              // tEvents.push({"dev":"keyboard", "msg":GC_KEYBOARD.scan()});
-             tEvents.push({"dev":"keyboard", "msg": {"key":[101],"mod":0,"dur":2}});
+             // tEvents.push({"dev":"keyboard", "msg": {"key":[101],"mod":0,"dur":2}});
+             tEvents.push({"dev":"gamepad", "msg": tNewState});
+
 
              for (let e of tEvents){
                  if (e.msg){
